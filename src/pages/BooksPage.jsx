@@ -24,7 +24,7 @@ function BooksPage() {
 
   const fetchBooks = async (page = 1) => {
     try {
-      const res = await axios.get(`http://localhost:5000/books?page=${page}`, {
+      const res = await axios.get(`https://book-management-system-backend-pearl.vercel.app/books?page=${page}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setBooks(res.data.books);
@@ -45,7 +45,7 @@ function BooksPage() {
     if (!value) return fetchBooks(currentPage);
 
     try {
-      const res = await axios.get(`http://localhost:5000/books/search?q=${value}`, {
+      const res = await axios.get(`https://book-management-system-backend-pearl.vercel.app/books/search?q=${value}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setBooks(res.data);
@@ -65,7 +65,7 @@ function BooksPage() {
   const handleDelete = (id) => setShowDelete(id);
   const confirmDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/books/${id}`, {
+      await axios.delete(`https://book-management-system-backend-pearl.vercel.app/books/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       showToast('Book deleted successfully!', 'success');

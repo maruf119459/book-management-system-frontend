@@ -29,7 +29,7 @@ function UpdateBookPage() {
   useEffect(() => {
     const fetchBook = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/books/${id}`, {
+        const res = await axios.get(`https://book-management-system-backend-pearl.vercel.app/books/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -56,7 +56,7 @@ function UpdateBookPage() {
     e.preventDefault();
 
     try {
-      await axios.put(`http://localhost:5000/books/${id}`, bookData, {
+      await axios.put(`https://book-management-system-backend-pearl.vercel.app/books/${id}`, bookData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',

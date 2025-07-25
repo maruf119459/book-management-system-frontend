@@ -36,7 +36,7 @@ function HomePage() {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:5000/books/search?q=${query}`, {
+      const response = await fetch(`https://book-management-system-backend-pearl.vercel.app/books/search?q=${query}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -72,7 +72,7 @@ function HomePage() {
     if (bookUrl.trim()) payload.url = bookUrl.trim();
 
     try {
-      const response = await fetch("http://localhost:5000/books", {
+      const response = await fetch("https://book-management-system-backend-pearl.vercel.app/books", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
