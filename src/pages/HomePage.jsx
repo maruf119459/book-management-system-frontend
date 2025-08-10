@@ -1,16 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import icon from "../book.ico";
+
 function HomePage() {
   const [bookName, setBookName] = useState("");
   const [bookUrl, setBookUrl] = useState("");
+  const [bookDescription, setBookDescription] = useState(""); // ✅ New state for description
   const [toast, setToast] = useState({ show: false, message: "", type: "" });
   const [suggestions, setSuggestions] = useState([]);
   const [suggestionsVisible, setSuggestionsVisible] = useState(false);
   const toastRef = useRef(null);
   const inputRef = useRef(null);
   const debounceTimeout = useRef(null);
-
 
   const token = localStorage.getItem("jwtToken");
 
@@ -36,11 +37,14 @@ function HomePage() {
       return;
     }
     try {
-      const response = await fetch(`https://book-management-system-backend-pearl.vercel.app/books/search?q=${query}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `https://book-management-system-backend-pearl.vercel.app/books/search?q=${query}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.ok) {
         const data = await response.json();
         const titles = data.map((book) => book.title);
@@ -70,16 +74,20 @@ function HomePage() {
 
     const payload = { title: bookName.trim() };
     if (bookUrl.trim()) payload.url = bookUrl.trim();
+    if (bookDescription.trim()) payload.description = bookDescription.trim(); // ✅ Add description if present
 
     try {
-      const response = await fetch("https://book-management-system-backend-pearl.vercel.app/books", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        "https://book-management-system-backend-pearl.vercel.app/books",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -91,6 +99,7 @@ function HomePage() {
       showToast("Book added successfully!", "success");
       setBookName("");
       setBookUrl("");
+      setBookDescription(""); // ✅ Reset description field
     } catch (err) {
       console.error(err);
       showToast("Error adding book.", "danger");
@@ -125,7 +134,9 @@ function HomePage() {
         <div className="w-100 px-3" style={{ maxWidth: "450px" }}>
           <div className="text-center mb-4">
             <h1 className="text-primary fw-bold">📚 Add New Book</h1>
-            <p className="text-muted">Enter the book name and its URL (optional).</p>
+            <p className="text-muted">
+              Enter the book name, its URL, and description (optional).
+            </p>
           </div>
           <div className="card p-4 shadow-sm">
             <form onSubmit={handleSubmit}>
@@ -143,7 +154,10 @@ function HomePage() {
                   autoComplete="off"
                 />
                 {suggestionsVisible && suggestions.length > 0 && (
-                  <ul className="list-group position-absolute w-100 mt-1" style={{ zIndex: 10 }}>
+                  <ul
+                    className="list-group position-absolute w-100 mt-1"
+                    style={{ zIndex: 10 }}
+                  >
                     {suggestions.map((suggestion, index) => (
                       <li
                         key={index}
@@ -173,6 +187,21 @@ function HomePage() {
                   value={bookUrl}
                   onChange={(e) => setBookUrl(e.target.value)}
                 />
+              </div>
+
+              {/* ✅ New Description Field */}
+              <div className="mb-3">
+                <label htmlFor="bookDescription" className="form-label">
+                  Description <span className="text-muted">(optional)</span>
+                </label>
+                <textarea
+                  id="bookDescription"
+                  className="form-control"
+                  placeholder="Enter a short description of the book"
+                  value={bookDescription}
+                  onChange={(e) => setBookDescription(e.target.value)}
+                  rows="3"
+                ></textarea>
               </div>
 
               <div className="d-grid">

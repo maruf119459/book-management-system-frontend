@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Helmet } from 'react-helmet';   
 import icon from '../assets/book.ico';
+
 function UpdateBookPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ function UpdateBookPage() {
   const [bookData, setBookData] = useState({
     title: '',
     url: '',
+    description: '', // ✅ added description
   });
 
   const [toast, setToast] = useState({
@@ -36,6 +38,7 @@ function UpdateBookPage() {
         setBookData({
           title: res.data.title || '',
           url: res.data.url || '',
+          description: res.data.description || '', // ✅ fetch description
         });
         document.title = `Update Book | ${res.data.title}`;
       } catch (err) {
@@ -44,7 +47,6 @@ function UpdateBookPage() {
     };
 
     fetchBook();
-
   }, [id, token]);
 
   const handleInputChange = (e) => {
@@ -118,13 +120,28 @@ function UpdateBookPage() {
               type="url"
               className="form-control"
               name="url"
-
               onChange={handleInputChange}
-              placeholder={bookData.url || "No url. Enter book URL"}
+              placeholder={bookData.url || "No URL. Enter book URL"}
               value={bookData.url || ''}
             />
             {!bookData.url && (
               <div className="form-text text-danger">No URL found</div>
+            )}
+          </div>
+
+          {/* ✅ New Description Field */}
+          <div className="mb-3">
+            <label className="form-label fw-bold">Book Description</label>
+            <textarea
+              className="form-control"
+              name="description"
+              rows="4"
+              onChange={handleInputChange}
+              placeholder={bookData.description || "No description. Enter a description"}
+              value={bookData.description || ''}
+            ></textarea>
+            {!bookData.description && (
+              <div className="form-text text-danger">No description found</div>
             )}
           </div>
 
